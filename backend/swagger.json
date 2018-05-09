@@ -32,12 +32,13 @@
         "tags": [
           "Groups"
         ],
-        "description": "Create new group in system",
+        "summary": "Create new group in system",
+        "description": "Create a new Group for the Support Scheduler",
         "parameters": [
           {
             "name": "group",
             "in": "body",
-            "description": "User that we want to create",
+            "description": "Group that we want to create",
             "schema": {
               "$ref": "#/definitions/Group"
             }
@@ -47,11 +48,14 @@
           "application/json"
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "New group is created",
             "schema": {
               "$ref": "#/definitions/Group"
             }
+          },
+          "400": {
+            "description": "Bad request"
           }
         }
       },
@@ -95,10 +99,10 @@
         }
       },
       "delete": {
-        "summary": "Delete group with given ID",
         "tags": [
           "Groups"
         ],
+        "summary": "Delete group with given ID",
         "responses": {
           "200": {
             "description": "Group is deleted",
@@ -132,6 +136,117 @@
           }
         }
       }
+    },
+
+    "/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create new user in system",
+        "description": "Create a new User for the Support Scheduler",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "New user is created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get all users in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Users"
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID of user that we want to find",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user with given ID",
+        "responses": {
+          "200": {
+            "description": "User is found",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete user with given ID",
+        "responses": {
+          "200": {
+            "description": "User is deleted",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user with give ID",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User with new values of properties",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User is updated",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -155,7 +270,8 @@
           "uniqueItems": true
         },
         "users": {
-          "type": "array"
+          "type": "array",
+          "$ref": "#/definitions/Users"
         },
         "createdAt": {
           "type": "date"
@@ -165,6 +281,38 @@
     "Groups": {
       "type": "array",
       "$ref": "#/definitions/Group"
+    },
+    "User": {
+      "required": [
+        "_id",
+        "firstName",
+        "lastName",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "_id" : {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
     }
   }
 }

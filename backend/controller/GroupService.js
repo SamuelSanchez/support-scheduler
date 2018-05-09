@@ -4,43 +4,47 @@ const
 let GroupService = {};
 
 //  Boiler function...
-let jsonValOrThrow = (err, next, res, val) => {
+let jsonValOrThrow = (err, res, val) => {
     if (err) {
-        next(err);
+        res.status(400).json(err);
     } else {
         res.json(val);
     }
 };
 
-GroupService.createGroup = (req, res, next) => {
+GroupService.createGroup = (req, res) => {
     let group = new Group(req.body);
     group.save( (err) => {
-        jsonValOrThrow(err, next, res, group)
+        if (err) {
+            res.status(400).json(err);
+        } else {
+            res.status(201).json(group);
+        }
     });
 };
 
-GroupService.getAllGroups = (req, res, next) => {
+GroupService.getAllGroups = (req, res) => {
     Group.find( (err, groups) => {
-        jsonValOrThrow(err, next, res, groups);
+        jsonValOrThrow(err, res, groups);
     });
 };
 
-GroupService.findGroupById = (req, res, next) => {
-    Group.findOne({_id: req.body._id}, (err, group) => {
-        jsonValOrThrow(err, next, res, group);
+GroupService.findGroupById = (req, res) => {
+    Group.findOne({_id: req.params.groupId}, (err, group) => {
+        jsonValOrThrow(err, res, group);
     });
 };
 
-GroupService.updateGroupById = (req, res, next) => {
-    Group.findAndModify({_id: req.body._id}, req.body, (err, group) => {
-        jsonValOrThrow(err, next, res, group);
+GroupService.updateGroupById = (req, res) => {
+    Group.findAndModify({_id: req.params.groupId}, req.body, (err, group) => {
+        jsonValOrThrow(err, res, group);
     });
 };
 
-GroupService.deleteGroupById = (req, res, next) => {
-    let group = Group.findOne({_id : req.body._id});
+GroupService.deleteGroupById = (req, res) => {
+    let group = Group.findOne({_id : req.params.groupId});
     group.remove( (err) => {
-        jsonValOrThrow(err, next, res, group);
+        jsonValOrThrow(err, res, group);
     });
 };
 
