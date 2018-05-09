@@ -1,5 +1,3 @@
-'use strict';
-
 //  Imports
 const
     express = require('express'),
@@ -17,10 +15,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //  Routes/APIs
 const
-    groupRoutes = require('./api/GroupRoutes');
+    groupRoutes = require('./api/GroupRoutes'),
+    userRoutes = require('./api/UserRoutes');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/api/v1/groups', groupRoutes);
+app.use('/api/v1/users', userRoutes);
 
 
 //  Start App

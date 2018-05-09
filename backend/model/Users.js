@@ -1,6 +1,7 @@
 const
     mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    util = require('util');
 
 let userSchema = new Schema({
     firstName: {
@@ -23,5 +24,20 @@ let userSchema = new Schema({
         required: true,
     },
 });
+
+userSchema.pre('update', (next) => {
+    this.update({}, { $inc: { __v: 1 } }, next);
+});
+
+userSchema.statics.findAndModify = (query, doc, callback) => {
+    console.log(this.collection);
+    return this.collection.findAndModify(query, [], doc, {upsert: true}, callback);
+};
+
+userSchema
+    .virtual('fullName')
+    .get(() => {
+        return util.format("%s %s", this.firstName, this.lastName);
+    });
 
 module.exports = mongoose.model('users', userSchema);
