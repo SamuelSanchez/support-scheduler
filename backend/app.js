@@ -4,8 +4,8 @@ const
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     swaggerUi = require('swagger-ui-express'),
-    swaggerDoc = require('./swagger.json'),
-    local = require('./constants');
+    swaggerDoc = require('./config/swagger.json'),
+    local = require('./config/constants');
 
 //  RestAPI requirements
 const app = express();

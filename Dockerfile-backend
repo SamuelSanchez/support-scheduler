@@ -1,0 +1,11 @@
+FROM node:latest
+
+RUN mkdir -p /usr/src/app/backend
+WORKDIR /usr/src/app/backend
+
+COPY backend/package.json /usr/src/app/backend
+RUN npm install
+
+COPY backend/ /usr/src/app/backend
+EXPOSE 3000
+CMD [ “node”, “app” ]
