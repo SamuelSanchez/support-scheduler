@@ -1,0 +1,19 @@
+version: '2'
+services:
+  backend:
+    container_name: support-scheduler-service
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile-backend
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
