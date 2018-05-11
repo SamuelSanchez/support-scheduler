@@ -8,4 +8,8 @@ RUN npm install
 
 COPY backend/ /usr/src/app/backend
 EXPOSE 3000
-CMD [ “node”, “app” ]
+
+# Use shell form
+# For non-prod use CMD to debug using bash as 'docker run -it <image> /bin/bash'
+# For production, use ENTRYPOINT
+CMD node app
