@@ -252,29 +252,20 @@
   "definitions": {
     "Group": {
       "required": [
-        "_id",
         "name",
-        "owner"
+        "admin"
       ],
       "properties": {
-        "_id": {
-          "type": "string",
-          "uniqueItems": true
-        },
         "name": {
           "type": "string",
           "uniqueItems": true
         },
-        "owner": {
-          "type": "string",
-          "uniqueItems": true
+        "admin": {
+          "type": "string"
         },
         "users": {
           "type": "array",
           "$ref": "#/definitions/Users"
-        },
-        "createdAt": {
-          "type": "date"
         }
       }
     },
@@ -284,17 +275,10 @@
     },
     "User": {
       "required": [
-        "_id",
-        "firstName",
-        "lastName",
         "email",
         "password"
       ],
       "properties": {
-        "_id" : {
-          "type": "string",
-          "uniqueItems": true
-        },
         "firstName": {
           "type": "string"
         },
@@ -306,6 +290,9 @@
           "uniqueItems": true
         },
         "password": {
+          "type": "string"
+        },
+        "externalId": {
           "type": "string"
         }
       }

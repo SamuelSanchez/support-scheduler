@@ -10,7 +10,7 @@ let groupSchema = new Schema({
         unique: true,
         trim: true,
     },
-    owner: {
+    admin: {
         type: String,
         required: true,
         trim: true,
@@ -20,22 +20,24 @@ let groupSchema = new Schema({
         ref: 'users',
         required: false,
     }],
-    createdAt: {
-        type: Date,
-        default: Date.now(),
-    }
 });
 
-//  Increase the version on updates
+/*
+    Add Audit trail and increase versioning
+    TODO: Need to add field 'modifiedBy' once authentication is added
+ */
 groupSchema.pre('save', (next) => {
-    //  TODO: need to increment on 'save' as well!
-    //this.increment();
+    // if (this.isNew) {
+    //     this['createdAt'] = Date.now();
+    // }
+    // this['lastUpdatedTime'] = Date.now();
+    // this.update({}, { $inc: { __v: 1 } }, next);
     return next();
 });
 
-groupSchema.pre('update', (next) => {
-    this.update({}, { $inc: { __v: 1 } }, next);
-});
+// groupSchema.pre('update', (next) => {
+//     this.update({}, { $inc: { __v: 1 } }, next);
+// });
 
 //  Custom functions
 groupSchema.static.findByName = (name, callback) => {
@@ -43,7 +45,7 @@ groupSchema.static.findByName = (name, callback) => {
 };
 
 groupSchema.static.findByOwner = (owner, callback) => {
-    return this.find({owner: owner}, callback);
+    return this.find({admin: owner}, callback);
 };
 
 groupSchema.static.findByUser = (user, callback) => {

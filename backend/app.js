@@ -30,6 +30,6 @@ app.listen(local.port, (err) => {
     if(!err) {
         console.log("Listening to port: %d", local.port);
     } else {
-        console.log("Error starting server!", err);
+        console.error("Error starting server!", err);
     }
 });

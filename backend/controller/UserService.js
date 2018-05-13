@@ -1,5 +1,7 @@
 const
-    User = require('../model/Users');
+    User    = require('../model/Users'),
+    bcrypt  = require('bcryptjs'),
+    salt    = bcrypt.genSaltSync();
 
 let UserService = {};
 
@@ -13,7 +15,13 @@ let jsonValOrThrow = (err, res, val) => {
 };
 
 UserService.createUser = (req, res) => {
+    //  Encrypt password and remove it from the request...
+    let hashPassword = bcrypt.hashSync(req.body.password, salt);
+    req.body.password = null;
+
     let user = new User(req.body);
+    user.password = hashPassword;
+
     user.save( (err) => {
         if (err) {
             res.status(400).json(err);

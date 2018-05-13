@@ -6,11 +6,11 @@ const
 let userSchema = new Schema({
     firstName: {
         type: String,
-        required: true,
+        required: false,
     },
     lastName: {
         type: String,
-        required: true,
+        required: false,
     },
     email: {
         type: String,
@@ -23,11 +23,29 @@ let userSchema = new Schema({
         type: String,
         required: true,
     },
+    externalId: {
+        type: String,
+        required: false,
+    },
 });
 
-userSchema.pre('update', (next) => {
-    this.update({}, { $inc: { __v: 1 } }, next);
+/*
+    Add Audit trail and increase versioning
+    TODO: Need to add field 'modifiedBy' once authentication is added
+ */
+userSchema.pre('save', (next) => {
+    // console.log(this);
+    // if (this.isNew) {
+    //     this['createdAt'] = Date.now();
+    // }
+    // this['lastUpdatedTime'] = Date.now();
+    // this.update({}, { $inc: { __v: 1 } }, next);
+    return next();
 });
+
+// userSchema.pre('update', (next) => {
+//     this.update({}, { $inc: { __v: 1 } }, next);
+// });
 
 userSchema.statics.findAndModify = (query, doc, callback) => {
     console.log(this.collection);
