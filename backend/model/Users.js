@@ -1,7 +1,8 @@
 const
-    mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    util = require('util');
+    mongoose    = require('mongoose'),
+    Schema      = mongoose.Schema,
+    util        = require('util'),
+    audit       = require('../utils/Audit');
 
 let userSchema = new Schema({
     firstName: {
@@ -29,22 +30,11 @@ let userSchema = new Schema({
     },
 });
 
-/*
-    Add Audit trail and increase versioning
-    TODO: Need to add field 'modifiedBy' once authentication is added
- */
-userSchema.pre('save', (next) => {
-    // console.log(this);
-    // if (this.isNew) {
-    //     this['createdAt'] = Date.now();
-    // }
-    // this['lastUpdatedTime'] = Date.now();
-    // this.update({}, { $inc: { __v: 1 } }, next);
-    return next();
-});
-
 // userSchema.pre('update', (next) => {
-//     this.update({}, { $inc: { __v: 1 } }, next);
+    // this.update({}, {
+    //     $set: { updatedAt: new Date() },
+    //     $inc: { __v: 1 },
+    // });
 // });
 
 userSchema.statics.findAndModify = (query, doc, callback) => {
@@ -57,5 +47,9 @@ userSchema
     .get(() => {
         return util.format("%s %s", this.firstName, this.lastName);
     });
+
+userSchema.plugin(audit, {
+    index: true
+});
 
 module.exports = mongoose.model('users', userSchema);

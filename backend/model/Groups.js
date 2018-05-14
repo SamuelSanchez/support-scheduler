@@ -1,7 +1,8 @@
 const
-    mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    ObjectId = Schema.Types.ObjectId;
+    mongoose    = require('mongoose'),
+    Schema      = mongoose.Schema,
+    ObjectId    = Schema.Types.ObjectId,
+    audit       = require('../utils/Audit');
 
 let groupSchema = new Schema({
     name: {
@@ -21,23 +22,6 @@ let groupSchema = new Schema({
         required: false,
     }],
 });
-
-/*
-    Add Audit trail and increase versioning
-    TODO: Need to add field 'modifiedBy' once authentication is added
- */
-groupSchema.pre('save', (next) => {
-    // if (this.isNew) {
-    //     this['createdAt'] = Date.now();
-    // }
-    // this['lastUpdatedTime'] = Date.now();
-    // this.update({}, { $inc: { __v: 1 } }, next);
-    return next();
-});
-
-// groupSchema.pre('update', (next) => {
-//     this.update({}, { $inc: { __v: 1 } }, next);
-// });
 
 //  Custom functions
 groupSchema.static.findByName = (name, callback) => {
@@ -67,5 +51,9 @@ groupSchema
     .get(() => {
         return this.users.length;
     });
+
+groupSchema.plugin(audit, {
+    index: true
+});
 
 module.exports = mongoose.model('groups', groupSchema);
