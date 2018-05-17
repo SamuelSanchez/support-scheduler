@@ -22,9 +22,16 @@ UserService.createUser = (req, res) => {
     let user = new User(req.body);
     user.password = hashPassword;
 
-    user.save( (err) => {
+    user.save( (err, user) => {
         if (err) {
-            res.status(400).json(err);
+            let errMessage;
+            //  Mongo duplicate key error
+            if (err.code === 11000) {
+                errMessage = err.errmsg;
+            } else {
+                errMessage = err.message;
+            }
+            res.status(400).json(errMessage);
         } else {
             res.status(201).json(user);
         }
@@ -38,23 +45,32 @@ UserService.getAllUsers = (req, res) => {
 };
 
 UserService.findUserById = (req, res, next, id) => {
+    console.log("Getting user by Id {}", id);
     User.findOne({_id: id}, (err, group) => {
         jsonValOrThrow(err, res, group);
     });
 };
 
 UserService.updateUserById = (req, res, next, id) => {
+    console.log("Getting user by Id {}", id);
     User.findAndModify({_id: id}, req.body, (err, group) => {
         jsonValOrThrow(err, res, group);
     });
 };
 
 UserService.deleteUserById = (req, res, next, id) => {
+    console.log("Getting user by Id {}", id);
     let user = User.findOne({_id : id});
     user.remove( (err) => {
         jsonValOrThrow(err, res, user);
     });
 };
 
+UserService.findUserByEmail = (req, res, next, email) => {
+    console.log("Getting user by email: {}", email);
+    User.findOne({email: email}, (err, group) => {
+        jsonValOrThrow(err, res, group);
+    });
+};
 
 module.exports = UserService;

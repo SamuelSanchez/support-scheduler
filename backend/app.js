@@ -4,7 +4,7 @@ const
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     swaggerUi = require('swagger-ui-express'),
-    swaggerDoc = require('./config/swagger.json'),
+    swaggerDoc = require('./swagger.json'),
     local = require('./config/constants');
 
 //  RestAPI requirements
@@ -15,13 +15,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 //  Routes/APIs
 const
-    groupRoutes = require('./api/GroupRoutes'),
-    userRoutes = require('./api/UserRoutes');
+    groupRoutes = require('./controller/GroupRoutes'),
+    userRoutes = require('./controller/UserRoutes');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/api/v1/groups', groupRoutes);
 app.use('/api/v1/users', userRoutes);
 
+//  Print all routes
+console.log(app._router.stack);
 
 //  Start App
 mongoose.connect(local.mongoUrl);

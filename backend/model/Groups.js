@@ -11,39 +11,17 @@ let groupSchema = new Schema({
         unique: true,
         trim: true,
     },
-    admin: {
-        type: String,
+    admins: [{
+        type: ObjectId,
+        ref: 'users',
         required: true,
-        trim: true,
-    },
-    users: [ {
+    }],
+    users: [{
         type: ObjectId,
         ref: 'users',
         required: false,
     }],
 });
-
-//  Custom functions
-groupSchema.static.findByName = (name, callback) => {
-    return this.find({name: name}, callback);
-};
-
-groupSchema.static.findByOwner = (owner, callback) => {
-    return this.find({admin: owner}, callback);
-};
-
-groupSchema.static.findByUser = (user, callback) => {
-    return this.find({users: {$in: [user]}}, callback);
-};
-
-groupSchema.statics.findAndModify = (query, doc, callback) => {
-    console.log(this.collection);
-    return this.collection.findAndModify(query, [], doc, {upsert: true}, callback);
-};
-
-// groupSchema.statics.findAndModify = (query, sort, doc, options, callback) => {
-//     return this.collection.findAndModify(query, sort, doc, options, callback);
-// };
 
 //  Not serializable values - (transient)
 groupSchema

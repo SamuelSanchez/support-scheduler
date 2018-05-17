@@ -2,8 +2,12 @@ let Audit = (schema, options) => {
     schema.add({
         createdAt   : Date,
         lastModified: Date,
+        // modifiedBy  : String,
     });
 
+    /**
+     *  Audit adjustments
+     */
     schema.pre('save', function (next) {
         if (this.isNew) {
             this.createdAt = Date.now();

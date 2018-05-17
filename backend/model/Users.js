@@ -30,18 +30,6 @@ let userSchema = new Schema({
     },
 });
 
-// userSchema.pre('update', (next) => {
-    // this.update({}, {
-    //     $set: { updatedAt: new Date() },
-    //     $inc: { __v: 1 },
-    // });
-// });
-
-userSchema.statics.findAndModify = (query, doc, callback) => {
-    console.log(this.collection);
-    return this.collection.findAndModify(query, [], doc, {upsert: true}, callback);
-};
-
 userSchema
     .virtual('fullName')
     .get(() => {

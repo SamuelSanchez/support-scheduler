@@ -14,11 +14,18 @@ let jsonValOrThrow = (err, res, val) => {
 
 GroupService.createGroup = (req, res) => {
     let group = new Group(req.body);
-    group.save( (err) => {
+    group.save( (err, group) => {
         if (err) {
-            res.status(400).json(err);
+            let errMessage;
+            //  Mongo duplicate key error
+            if (err.code === 11000) {
+                errMessage = err.errmsg;
+            } else {
+                errMessage = err.message;
+            }
+            res.status(400).json(errMessage);
         } else {
-            res.status(201).json(group);
+            res.status(201).json(user);
         }
     });
 };
@@ -36,8 +43,8 @@ GroupService.findGroupById = (req, res) => {
 };
 
 GroupService.updateGroupById = (req, res) => {
-    Group.findAndModify({_id: req.params.groupId}, req.body, (err, group) => {
-        jsonValOrThrow(err, res, group);
+    Group.findOneAndUpdate({ _id: req.params.groupId }, req.body, { upsert: true },
+        (err, group) => { jsonValOrThrow(err, res, group);
     });
 };
 
@@ -48,5 +55,16 @@ GroupService.deleteGroupById = (req, res) => {
     });
 };
 
+GroupService.findGroupByName = (req, res) => {
+    Group.findOne({name : req.params.name}, (err, group) => {
+        jsonValOrThrow(err, res, group);
+    });
+};
+
+GroupService.findGroupByAdmin = (req, res) => {
+    Group.findOne({admins : { $in: [req.params.admin] }}, (err, group) => {
+        jsonValOrThrow(err, res, group);
+    });
+};
 
 module.exports = GroupService;

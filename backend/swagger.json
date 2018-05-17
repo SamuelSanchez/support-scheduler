@@ -137,6 +137,56 @@
         }
       }
     },
+    "/groups/name/{name}": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "description": "Name of group that we want to find",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Get group with given name",
+        "responses": {
+          "200": {
+            "description": "Group is found",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          }
+        }
+      }
+    },
+    "/groups/admin/{admin}": {
+      "parameters": [
+        {
+          "name": "admin",
+          "in": "path",
+          "required": true,
+          "description": "Admin of group that we want to find",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "summary": "Get group with given admin",
+        "responses": {
+          "200": {
+            "description": "Group is found",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          }
+        }
+      }
+    },
 
     "/users": {
       "post": {
@@ -247,21 +297,47 @@
           }
         }
       }
+    },
+    "/users/email/{email}": {
+      "parameters": [
+        {
+          "name": "email",
+          "in": "path",
+          "required": true,
+          "description": "email of user that we want to find",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user with given email",
+        "responses": {
+          "200": {
+            "description": "User is found",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
     "Group": {
       "required": [
         "name",
-        "admin"
+        "admins"
       ],
       "properties": {
         "name": {
           "type": "string",
           "uniqueItems": true
         },
-        "admin": {
-          "type": "string"
+        "admins": {
+          "type": "array",
+          "$ref": "#/definitions/Users"
         },
         "users": {
           "type": "array",
