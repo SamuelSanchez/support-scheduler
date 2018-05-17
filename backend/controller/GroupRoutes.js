@@ -6,6 +6,12 @@ const
  *  Group API
  */
 
+//  TODO: FIX
+router.route('/').all((req, res, next) => {
+    // console.log("Execute before calling any other function...");
+    next();
+});
+
 router.route('/')
     .post(service.createGroup)
     .get(service.getAllGroups);

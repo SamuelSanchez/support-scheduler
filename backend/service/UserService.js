@@ -44,31 +44,27 @@ UserService.getAllUsers = (req, res) => {
     });
 };
 
-UserService.findUserById = (req, res, next, id) => {
-    console.log("Getting user by Id {}", id);
-    User.findOne({_id: id}, (err, group) => {
+UserService.findUserById = (req, res) => {
+    User.findOne({_id: req.user.id}, (err, group) => {
         jsonValOrThrow(err, res, group);
     });
 };
 
-UserService.updateUserById = (req, res, next, id) => {
-    console.log("Getting user by Id {}", id);
-    User.findAndModify({_id: id}, req.body, (err, group) => {
+UserService.updateUserById = (req, res) => {
+    User.findAndModify({_id: req.user.id}, req.body, (err, group) => {
         jsonValOrThrow(err, res, group);
     });
 };
 
-UserService.deleteUserById = (req, res, next, id) => {
-    console.log("Getting user by Id {}", id);
-    let user = User.findOne({_id : id});
+UserService.deleteUserById = (req, res) => {
+    let user = User.findOne({_id : req.user.id});
     user.remove( (err) => {
         jsonValOrThrow(err, res, user);
     });
 };
 
-UserService.findUserByEmail = (req, res, next, email) => {
-    console.log("Getting user by email: {}", email);
-    User.findOne({email: email}, (err, group) => {
+UserService.findUserByEmail = (req, res) => {
+    User.findOne({email: req.user.email}, (err, group) => {
         jsonValOrThrow(err, res, group);
     });
 };

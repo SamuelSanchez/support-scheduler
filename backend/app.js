@@ -22,8 +22,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use('/api/v1/groups', groupRoutes);
 app.use('/api/v1/users', userRoutes);
 
+//  TODO: FIX
 //  Print all routes
-console.log(app._router.stack);
+const getRoutes = require('get-routes');
+const routes = getRoutes(app);
+console.log(routes);
 
 //  Start App
 mongoose.connect(local.mongoUrl);
