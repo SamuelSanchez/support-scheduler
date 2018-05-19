@@ -1,20 +1,26 @@
 const
     User    = require('../model/Users'),
     bcrypt  = require('bcryptjs'),
-    salt    = bcrypt.genSaltSync();
+    salt    = bcrypt.genSaltSync(),
+    util    = require('util');
 
 let UserService = {};
 
 //  Boiler function...
-let jsonValOrThrow = (err, res, val) => {
+let jsonValueFound = (err, res, val, notFoundMsg) => {
     if (err) {
-        res.status(400).json(err);
+        res.status(500).json(err);
     } else {
-        res.json(val);
+        if (val == null) {
+            res.status(404).json(notFoundMsg);
+        } else {
+            res.json(val);
+        }
     }
 };
 
 UserService.createUser = (req, res) => {
+    console.debug("Creating a new User");
     //  Encrypt password and remove it from the request...
     let hashPassword = bcrypt.hashSync(req.body.password, salt);
     req.body.password = null;
@@ -39,33 +45,48 @@ UserService.createUser = (req, res) => {
 };
 
 UserService.getAllUsers = (req, res) => {
-    User.find( (err, groups) => {
-        jsonValOrThrow(err, res, groups);
+    console.debug("Getting all users");
+    User.find( (err, users) => {
+        jsonValueFound(err, res, users, null);
     });
 };
 
 UserService.findUserById = (req, res) => {
-    User.findOne({_id: req.user.id}, (err, group) => {
-        jsonValOrThrow(err, res, group);
+    console.debug("Getting User by id:%s", req.user.id);
+    User.findOne({_id: req.user.id}, (err, user) => {
+        jsonValueFound(err, res, user, util.format("User Not Found by id:%s", req.user.id));
     });
 };
 
 UserService.updateUserById = (req, res) => {
-    User.findAndModify({_id: req.user.id}, req.body, (err, group) => {
-        jsonValOrThrow(err, res, group);
+    console.debug("Updating User by id:%s", req.user.id);
+    User.findOneAndUpdate(
+        {_id: req.user.id},
+        req.body,
+        {
+            new: true,
+            upsert: false,
+            passRawResult: false,
+            overwrite: false,
+            runValidators: true,
+            setDefaultsOnInsert: true
+        },
+        (err, user) => {
+        jsonValueFound(err, res, user, util.format("User Not Found by id:%s", req.user.id));
     });
 };
 
 UserService.deleteUserById = (req, res) => {
-    let user = User.findOne({_id : req.user.id});
-    user.remove( (err) => {
-        jsonValOrThrow(err, res, user);
+    console.debug("Deleting User by id:%s", req.user.id);
+    User.findByIdAndRemove(req.user.id, (err, user) => {
+        jsonValueFound(err, res, user, util.format("User Not Found by id:%s", req.user.id));
     });
 };
 
 UserService.findUserByEmail = (req, res) => {
-    User.findOne({email: req.user.email}, (err, group) => {
-        jsonValOrThrow(err, res, group);
+    console.debug("Getting User by email:%s", req.user.email);
+    User.findOne({email: req.user.email}, (err, user) => {
+        jsonValueFound(err, res, user, util.format("User Not Found by email:%s", req.user.email));
     });
 };
 

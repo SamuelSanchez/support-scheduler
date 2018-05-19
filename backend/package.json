@@ -20,7 +20,6 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
-    "get-routes": "^0.2.0",
     "mongoose": "^5.0.17",
     "swagger-ui-express": "^3.0.8",
     "util": "^0.10.3"

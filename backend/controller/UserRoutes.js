@@ -3,10 +3,8 @@ const
     service = require('../service/UserService');
 
 /**
- *  User API
+ *  User API Routes
  */
-
-//  TODO: FIX
 router.route('*').all((req, res, next) => {
     console.log("Execute before calling any other function...");
     next();
@@ -21,14 +19,17 @@ router.route('/:userId')
     .delete(service.deleteUserById)
     .put(service.updateUserById);
 
+router.route('/email/:email')
+    .get(service.findUserByEmail);
+
+/**
+ *  User API Params
+ */
 router.param('userId', function(req, res, next, id) {
     req.user = req.user || {};
     req.user.id = id;
     next();
 });
-
-router.route('/email/:email')
-    .get(service.findUserByEmail);
 
 router.param('email', function(req, res, next, email) {
     req.user = req.user || {};
