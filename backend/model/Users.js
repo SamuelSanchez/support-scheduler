@@ -2,7 +2,8 @@ const
     mongoose    = require('mongoose'),
     Schema      = mongoose.Schema,
     util        = require('util'),
-    audit       = require('../utils/Audit');
+    audit       = require('../utils/Audit'),
+    MongoUtil   = require('../utils/MongoUtil');
 
 let userSchema = new Schema({
     firstName: {
@@ -29,6 +30,17 @@ let userSchema = new Schema({
         required: false,
     },
 });
+
+userSchema.statics.findAndModify = function (query, doc, callback) {
+    let options = {
+        new: true,
+        upsert: false,
+        passRawResult: false,
+        runValidators: true,
+    };
+    let normalizeValues = MongoUtil.updateAudit(MongoUtil.normalizeValues(doc));
+    return this.findOneAndUpdate(query, normalizeValues, options, callback);
+};
 
 userSchema
     .virtual('fullName')

@@ -60,18 +60,7 @@ UserService.findUserById = (req, res) => {
 
 UserService.updateUserById = (req, res) => {
     console.debug("Updating User by id:%s", req.user.id);
-    User.findOneAndUpdate(
-        {_id: req.user.id},
-        req.body,
-        {
-            new: true,
-            upsert: false,
-            passRawResult: false,
-            overwrite: false,
-            runValidators: true,
-            setDefaultsOnInsert: true
-        },
-        (err, user) => {
+    User.findAndModify({_id: req.user.id}, req.body, (err, user) => {
         jsonValueFound(err, res, user, util.format("User Not Found by id:%s", req.user.id));
     });
 };

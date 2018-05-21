@@ -25,6 +25,7 @@ app.use('/api/v1/users', userRoutes);
 
 //  Start App
 mongoose.connect(local.mongoUrl);
+mongoose.set('debug', true);
 
 app.listen(local.port, (err) => {
     if(!err) {
