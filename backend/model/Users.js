@@ -38,7 +38,9 @@ userSchema.statics.findAndModify = function (query, doc, callback) {
         passRawResult: false,
         runValidators: true,
     };
-    let normalizeValues = MongoUtil.updateAudit(MongoUtil.normalizeValues(doc));
+    let normalizeValues = MongoUtil.normalizeValues(doc);
+    normalizeValues = MongoUtil.updateAudit(normalizeValues);
+    normalizeValues = MongoUtil.updateVersion(normalizeValues);
     return this.findOneAndUpdate(query, normalizeValues, options, callback);
 };
 

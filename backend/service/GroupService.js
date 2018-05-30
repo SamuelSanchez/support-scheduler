@@ -60,8 +60,8 @@ GroupService.findGroupById = (req, res) => {
 
 GroupService.updateGroupById = (req, res) => {
     console.debug("Updating Group by id:%s", req.group.id);
-    Group.findOneAndUpdate({ _id: req.group.id }, req.body, { upsert: true },
-        (err, group) => { jsonValOrThrow(err, res, group);
+    Group.findAndModify({ _id: req.group.id }, req.body, (err, group) => {
+        jsonValueFound(err, res, group, util.format("Group Not Found by id:%s", req.group.id));
     });
 };
 

@@ -27,13 +27,21 @@ let UpdateAudit = (values) => {
         values.$set = {};
     }
     values.$set["lastModified"] = Date.now();
-    // values[lastModified] = Date.now();
+    return values;
+};
+
+let UpdateVersion = (values) => {
+    if (Object.keys(values).indexOf("$inc") === -1) {
+        values.$inc = {};
+    }
+    values.$inc["__v"] = 1;
     return values;
 };
 
 let MongoUtils = {
     normalizeValues : NormalizeValues,
     updateAudit     : UpdateAudit,
+    updateVersion   : UpdateVersion,
 };
 
 module.exports = MongoUtils;
